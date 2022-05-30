@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace EmployeeApp
 {
-    public static class Project
+    public static class ProjectManager
     {
         private static string FilePath =>
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "Employees.json";
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Employees.json";
 
         private static JsonSerializerSettings Settings => new JsonSerializerSettings()
         {
@@ -36,14 +37,11 @@ namespace EmployeeApp
 
             var content = File.ReadAllText(FilePath);
 
-            try
-            {
-                return JsonConvert.DeserializeObject<List<BaseEmployee>>(content, Settings);
-            }
-            catch
-            {
-                return new List<BaseEmployee>();
-            }
+            return JsonConvert.DeserializeObject<List<BaseEmployee>>(content, Settings)
+                   ?? new List<BaseEmployee>();
         }
+
+        public static List<BaseEmployee> SortList(List<BaseEmployee> employees, EmployeeType type) =>
+            new List<BaseEmployee>(employees).Where(x => x.EmployeeType == type).ToList();
     }
 }

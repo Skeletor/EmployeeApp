@@ -21,5 +21,7 @@ namespace EmployeeApp
         public virtual EmployeeType EmployeeType { get; }
 
         public abstract object Clone();
+
+        public override string ToString() => FirstName + ' ' + LastName + ' ' + MiddleName;
     }
 }
