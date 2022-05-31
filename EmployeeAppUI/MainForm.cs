@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using EmployeeApp;
 
@@ -13,8 +9,14 @@ namespace EmployeeAppUI
 {
     public partial class MainForm : Form
     {
+        /// <summary>
+        /// Список всех сотрудников, загружаемых из файла
+        /// </summary>
         private List<BaseEmployee> Employees { get; set; } = Project.GetEmployees();
 
+        /// <summary>
+        /// Строковая константа для отображения в <see cref="employeeTypeComboBox"/>
+        /// </summary>
         private const string AllTypes = "Все";
 
         public MainForm()
@@ -23,6 +25,9 @@ namespace EmployeeAppUI
             InitControls();
         }
 
+        /// <summary>
+        /// Инициализация некоторых элементов управления начальными значениями
+        /// </summary>
         private void InitControls()
         {
             employeeListBox.Items.AddRange(Employees.ToArray());
@@ -36,6 +41,11 @@ namespace EmployeeAppUI
             employeeTypeComboBox.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Событие нажатия на кнопку "Добавить"
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="e"></param>
         private void AddButton_Click(object s, EventArgs e)
         {
             var eForm = new EmployeeForm();
@@ -48,6 +58,11 @@ namespace EmployeeAppUI
             SortList();
         }
 
+        /// <summary>
+        /// Событие нажатия на кнопку "Изменить"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditButton_Click(object sender, EventArgs e)
         {
             var index = employeeListBox.SelectedIndex;
@@ -66,6 +81,11 @@ namespace EmployeeAppUI
             SortList();
         }
 
+        /// <summary>
+        /// Приведение к нужному типу и сохранение в список
+        /// </summary>
+        /// <param name="employee">Приводимый параметр</param>
+        /// <param name="info">Дополнительная информация</param>
         private void ConvertAndAddEmployee(BaseEmployee employee, string info)
         {
             switch (employee.EmployeeType)
@@ -96,6 +116,10 @@ namespace EmployeeAppUI
             }
         }
 
+        /// <summary>
+        /// Добавление сотрудника в список
+        /// </summary>
+        /// <param name="employee">Сотрудник для добавления</param>
         private void AddEmployee(BaseEmployee employee)
         {
             Employees.Insert(0, employee);
@@ -103,6 +127,12 @@ namespace EmployeeAppUI
             employeeListBox.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Преобразование и обновление информации о сотруднике
+        /// </summary>
+        /// <param name="employee">Обновляемый сотрудник</param>
+        /// <param name="info">Дополнительная информация</param>
+        /// <param name="index">Индекс сотрудника в списке</param>
         private void ConvertAndReplaceEmployee(BaseEmployee employee, string info, int index)
         {
             switch (employee.EmployeeType)
@@ -133,6 +163,11 @@ namespace EmployeeAppUI
             }
         }
 
+        /// <summary>
+        /// Обновление сотрудника в списке
+        /// </summary>
+        /// <param name="employee">Сотрудник для изменения</param>
+        /// <param name="index">Индекс сотрудника в списке</param>
         private void ReplaceEmployee(BaseEmployee employee, int index)
         {
             Employees.RemoveAt(index);
@@ -142,6 +177,9 @@ namespace EmployeeAppUI
             employeeListBox.SelectedIndex = index;
         }
 
+        /// <summary>
+        /// Сортировка списка в соответствии с выбранным типом в <see cref="employeeTypeComboBox"/>
+        /// </summary>
         private void SortList()
         {
             employeeListBox.Items.Clear();
@@ -157,6 +195,11 @@ namespace EmployeeAppUI
             }
         }
 
+        /// <summary>
+        /// Событие удаления сотрудника
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteButton_Click(object sender, EventArgs e)
         {
             var employee = employeeListBox.SelectedItem as BaseEmployee;

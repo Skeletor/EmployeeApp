@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using EmployeeApp;
 
@@ -13,10 +6,19 @@ namespace EmployeeAppUI
 {
     public partial class EmployeeForm : Form
     {
+        /// <summary>
+        /// Задаваемый индекс. Служит для определения возможности обновления типа сотрудника
+        /// </summary>
         private int ComboBoxIndex { get; set; } = 0;
 
+        /// <summary>
+        /// Текущий сотрудник
+        /// </summary>
         public BaseEmployee CurrentEmployee { get; private set; }
 
+        /// <summary>
+        /// Дополнительная информация
+        /// </summary>
         public string ExtraInfo { get; private set; }
 
         public EmployeeForm()
@@ -32,12 +34,20 @@ namespace EmployeeAppUI
             FillEmployeeInfo(CurrentEmployee = employee);
         }
 
+        /// <summary>
+        /// Инициализация некоторых элементов управления значениями по умолчанию
+        /// </summary>
         private void InitControls()
         {
             FillComboBox(genderTypeComboBox, typeof(GenderType));
             FillComboBox(employeeTypeComboBox, typeof(EmployeeType));
         }
 
+        /// <summary>
+        /// Заполнение <see cref="ComboBox"/> значениями по умолчанию
+        /// </summary>
+        /// <param name="cb"><see cref="ComboBox"/> для заполнения</param>
+        /// <param name="t">Тип перечисления</param>
         private void FillComboBox(ComboBox cb, Type t)
         {
             var names = Enum.GetNames(t);
@@ -49,6 +59,10 @@ namespace EmployeeAppUI
             cb.SelectedIndex = ComboBoxIndex = 0;
         }
 
+        /// <summary>
+        /// Заполнение данных о сотруднике
+        /// </summary>
+        /// <param name="employee"></param>
         private void FillEmployeeInfo(BaseEmployee employee)
         {
             firstNameTextBox.Text = employee.FirstName;
@@ -62,6 +76,10 @@ namespace EmployeeAppUI
             FillExtraInfo(employee);
         }
 
+        /// <summary>
+        /// Заполнение дополнительных данных о сотруднике
+        /// </summary>
+        /// <param name="employee"></param>
         private void FillExtraInfo(BaseEmployee employee)
         {
             var info = "";
@@ -92,6 +110,12 @@ namespace EmployeeAppUI
             extraTextBox.Text = info;
         }
 
+        /// <summary>
+        /// Меняет текст в <see cref="Label"/> в зависимости от выбранного типа сотрудника.
+        /// Также проверяет, пытается ли пользователь понизить сотрудника в должности
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void employeeTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             var index = employeeTypeComboBox.SelectedIndex;
@@ -123,6 +147,9 @@ namespace EmployeeAppUI
             }
         }
 
+        /// <summary>
+        /// Сохранение данных о сотруднике
+        /// </summary>
         private void SaveEmployeeInfo()
         {
             CurrentEmployee.FirstName = firstNameTextBox.Text;
@@ -133,6 +160,9 @@ namespace EmployeeAppUI
             ExtraInfo = extraTextBox.Text;
         }
 
+        /// <summary>
+        /// Обновление типа сотрудника
+        /// </summary>
         private void UpdateEmployeeType()
         {
             switch ((EmployeeType)employeeTypeComboBox.SelectedIndex)
@@ -157,6 +187,10 @@ namespace EmployeeAppUI
             SaveEmployeeInfo();
         }
 
+        /// <summary>
+        /// Метод-проверка на ввод корректных значений в <see cref="TextBox"/>
+        /// </summary>
+        /// <returns>true, если все поля заполнены какими-либо данными. Иначе - false</returns>
         private bool IsValid()
         {
             return !(firstNameTextBox.Text.Trim() == ""
@@ -165,6 +199,11 @@ namespace EmployeeAppUI
                   || extraTextBox.Text.Trim() == "");
         }
 
+        /// <summary>
+        /// Метод-обработка ситуации сохранения частично незаполненной информации о сотруднике
+        /// </summary>
+        /// <returns>true, если пользователь согласен на сохранение частичной информации.
+        /// Иначе - false</returns>
         private new bool Validate()
         {
             if (!IsValid())
@@ -176,8 +215,18 @@ namespace EmployeeAppUI
             return true;
         }
 
+        /// <summary>
+        /// Метод-проверка на возможность смены типа сотрудника в <see cref="ComboBox"/>
+        /// </summary>
+        /// <param name="cbIndex">Текущий выбранный индекс</param>
+        /// <returns>true, если выбранный индекс больше или равен <see cref="ComboBoxIndex"/></returns>
         private bool CanChangeType(int cbIndex) => cbIndex >= ComboBoxIndex;
 
+        /// <summary>
+        /// Событие нажатия на кнопку "ОК"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OKButton_Click(object sender, EventArgs e)
         {
             if (!Validate())
@@ -187,6 +236,11 @@ namespace EmployeeAppUI
             DialogResult = DialogResult.OK;
         }
 
+        /// <summary>
+        /// Событие нажатия на кнопку "Отмена"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cancelButton_Click(object sender, EventArgs e) => DialogResult = DialogResult.Cancel;
     }
 }

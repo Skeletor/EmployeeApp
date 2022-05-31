@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EmployeeApp
+﻿namespace EmployeeApp
 {
+    /// <summary>
+    /// Перечисление типов сотрудников
+    /// </summary>
     public enum EmployeeType
     {
         Рабочий,
