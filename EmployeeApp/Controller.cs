@@ -11,15 +11,5 @@ namespace EmployeeApp
         public string EquipmentName { get; set; }
 
         public override EmployeeType EmployeeType => EmployeeType.Контролёр;
-
-        public override object Clone() => new Controller
-        {
-            FirstName = FirstName,
-            LastName = LastName,
-            MiddleName = MiddleName,
-            DateOfBirth = DateOfBirth,
-            Gender = Gender,
-            EquipmentName = EquipmentName
-        };
     }
 }

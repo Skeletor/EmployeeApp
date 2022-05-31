@@ -13,13 +13,27 @@ namespace EmployeeAppUI
 {
     public partial class MainForm : Form
     {
-        private List<BaseEmployee> Employees { get; set; } = ProjectManager.GetEmployees();
+        private List<BaseEmployee> Employees { get; set; } = Project.GetEmployees();
+
+        private const string AllTypes = "Все";
 
         public MainForm()
         {
             InitializeComponent();
+            InitControls();
+        }
 
+        private void InitControls()
+        {
             employeeListBox.Items.AddRange(Employees.ToArray());
+
+            employeeTypeComboBox.Items.Add(AllTypes);
+            var values = Enum.GetValues(typeof(EmployeeType)).Cast<EmployeeType>().ToArray();
+            foreach (var item in values)
+            {
+                employeeTypeComboBox.Items.Add(item.ToString().Replace('_', ' '));
+            }
+            employeeTypeComboBox.SelectedIndex = 0;
         }
 
         private void AddButton_Click(object s, EventArgs e)
@@ -31,16 +45,16 @@ namespace EmployeeAppUI
                 return;
 
             ConvertAndAddEmployee(eForm.CurrentEmployee, eForm.ExtraInfo);
+            SortList();
         }
 
         private void EditButton_Click(object sender, EventArgs e)
         {
             var index = employeeListBox.SelectedIndex;
+            var employee = employeeListBox.SelectedItem as BaseEmployee;
 
             if (index == -1)
                 return;
-
-            var employee = Employees[index];
 
             var eForm = new EmployeeForm(employee);
             eForm.ShowDialog();
@@ -49,6 +63,7 @@ namespace EmployeeAppUI
                 return;
 
             ConvertAndReplaceEmployee(eForm.CurrentEmployee, eForm.ExtraInfo, index);
+            SortList();
         }
 
         private void ConvertAndAddEmployee(BaseEmployee employee, string info)
@@ -127,21 +142,38 @@ namespace EmployeeAppUI
             employeeListBox.SelectedIndex = index;
         }
 
-        private void MainForm_FormClosing(object s, FormClosingEventArgs e) =>
-            ProjectManager.SaveEmployees(Employees);
+        private void SortList()
+        {
+            employeeListBox.Items.Clear();
+
+            if (employeeTypeComboBox.SelectedItem.ToString() == AllTypes)
+            {
+                employeeListBox.Items.AddRange(Employees.ToArray());
+            }
+            else
+            {
+                var sortedList = Project.SortList(Employees, (EmployeeType)employeeTypeComboBox.SelectedIndex - 1);
+                employeeListBox.Items.AddRange(sortedList.ToArray());
+            }
+        }
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            var index = employeeListBox.SelectedIndex;
+            var employee = employeeListBox.SelectedItem as BaseEmployee;
 
-            if (index == -1)
+            if (employee == null)
             {
                 MessageBox.Show("Не выбран сотрудник для удаления.");
                 return;
             }
 
-            Employees.RemoveAt(index);
-            employeeListBox.Items.RemoveAt(index);
+            Employees.Remove(employee);
+            employeeListBox.Items.Remove(employee);
         }
+
+        private void employeeTypeComboBox_SelectedIndexChanged(object sender, EventArgs e) => SortList();
+
+        private void MainForm_FormClosing(object s, FormClosingEventArgs e) =>
+           Project.SaveEmployees(Employees);
     }
 }

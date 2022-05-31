@@ -29,6 +29,7 @@ namespace EmployeeAppUI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EmployeeForm));
             this.firstNameTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -124,9 +125,9 @@ namespace EmployeeAppUI
             this.dynamicLabel.AutoSize = true;
             this.dynamicLabel.Location = new System.Drawing.Point(12, 189);
             this.dynamicLabel.Name = "dynamicLabel";
-            this.dynamicLabel.Size = new System.Drawing.Size(46, 17);
+            this.dynamicLabel.Size = new System.Drawing.Size(38, 17);
             this.dynamicLabel.TabIndex = 9;
-            this.dynamicLabel.Text = "label5";
+            this.dynamicLabel.Text = "label";
             // 
             // employeeTypeComboBox
             // 
@@ -208,9 +209,13 @@ namespace EmployeeAppUI
             this.Controls.Add(this.lastNameTextBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.firstNameTextBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(320, 568);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(320, 568);
             this.Name = "EmployeeForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Сотрудник";
             this.ResumeLayout(false);
             this.PerformLayout();

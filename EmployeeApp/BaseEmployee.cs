@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeApp
 {
-    public abstract class BaseEmployee : ICloneable
+    public abstract class BaseEmployee
     {
         public string FirstName { get; set; }
 
@@ -18,9 +18,7 @@ namespace EmployeeApp
 
         public GenderType Gender { get; set; }
 
-        public virtual EmployeeType EmployeeType { get; }
-
-        public abstract object Clone();
+        public abstract EmployeeType EmployeeType { get; }
 
         public override string ToString() => FirstName + ' ' + LastName + ' ' + MiddleName;
     }

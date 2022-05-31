@@ -13,6 +13,8 @@ namespace EmployeeAppUI
 {
     public partial class EmployeeForm : Form
     {
+        private int ComboBoxIndex { get; set; } = 0;
+
         public BaseEmployee CurrentEmployee { get; private set; }
 
         public string ExtraInfo { get; private set; }
@@ -44,7 +46,7 @@ namespace EmployeeAppUI
                 cb.Items.Add(item.Replace('_', ' '));
             }
 
-            cb.SelectedIndex = 0;
+            cb.SelectedIndex = ComboBoxIndex = 0;
         }
 
         private void FillEmployeeInfo(BaseEmployee employee)
@@ -55,6 +57,7 @@ namespace EmployeeAppUI
             dateTimePicker.Value = employee.DateOfBirth;
             genderTypeComboBox.SelectedIndex = (int)employee.Gender;
             employeeTypeComboBox.SelectedIndex = (int)employee.EmployeeType;
+            ComboBoxIndex = employeeTypeComboBox.SelectedIndex;
 
             FillExtraInfo(employee);
         }
@@ -91,7 +94,16 @@ namespace EmployeeAppUI
 
         private void employeeTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch ((EmployeeType)employeeTypeComboBox.SelectedIndex)
+            var index = employeeTypeComboBox.SelectedIndex;
+
+            if (!CanChangeType(index))
+            {
+                MessageBox.Show("Нельзя понизить сотрудника в должности.");
+                employeeTypeComboBox.SelectedIndex = ComboBoxIndex;
+                return;
+            }
+
+            switch ((EmployeeType)index)
             {
                 case EmployeeType.Рабочий:
                     dynamicLabel.Text = "ФИО начальника";
@@ -127,35 +139,54 @@ namespace EmployeeAppUI
             {
                 case EmployeeType.Рабочий:
                     CurrentEmployee = new Worker();
-                    SaveEmployeeInfo();
                     break;
 
                 case EmployeeType.Контролёр:
                     CurrentEmployee = new Controller();
-                    SaveEmployeeInfo();
                     break;
 
                 case EmployeeType.Руководитель_подразделения:
                     CurrentEmployee = new UnitHead();
-                    SaveEmployeeInfo();
                     break;
 
                 case EmployeeType.Директор:
                     CurrentEmployee = new Director();
-                    SaveEmployeeInfo();
                     break;
             }
+
+            SaveEmployeeInfo();
         }
+
+        private bool IsValid()
+        {
+            return !(firstNameTextBox.Text.Trim() == ""
+                  || lastNameTextBox.Text.Trim() == ""
+                  || middleNameTextBox.Text.Trim() == ""
+                  || extraTextBox.Text.Trim() == "");
+        }
+
+        private new bool Validate()
+        {
+            if (!IsValid())
+            {
+                return MessageBox.Show("Одно или несколько полей остались незаполненными. " +
+                    "Все равно сохранить?", "", MessageBoxButtons.OKCancel) != DialogResult.Cancel;
+            }
+
+            return true;
+        }
+
+        private bool CanChangeType(int cbIndex) => cbIndex >= ComboBoxIndex;
 
         private void OKButton_Click(object sender, EventArgs e)
         {
+            if (!Validate())
+                return;
+
             UpdateEmployeeType();
             DialogResult = DialogResult.OK;
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-        }
+        private void cancelButton_Click(object sender, EventArgs e) => DialogResult = DialogResult.Cancel;
     }
 }

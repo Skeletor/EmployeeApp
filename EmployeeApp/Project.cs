@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace EmployeeApp
 {
-    public static class ProjectManager
+    public static class Project
     {
         private static string FilePath =>
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Employees.json";

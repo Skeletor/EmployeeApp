@@ -11,15 +11,5 @@ namespace EmployeeApp
         public string HeadLFM { get; set; }
 
         public override EmployeeType EmployeeType => EmployeeType.Рабочий;
-
-        public override object Clone() => new Worker
-        {
-            FirstName = FirstName,
-            LastName = LastName,
-            MiddleName = MiddleName,
-            Gender = Gender,
-            DateOfBirth = DateOfBirth,
-            HeadLFM = HeadLFM
-        };
     }
 }
